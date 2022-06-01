@@ -1,15 +1,21 @@
 package entity;
 
+import java.time.DayOfWeek;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -39,6 +45,18 @@ public class Professor {
 	@ManyToOne(optional = false)
 	@JoinColumn(name = "department_id", nullable = false, insertable = false, updatable = false)
 	private Department department;
+	
+	@Enumerated(EnumType.STRING)
+	@Column(name = "day", nullable = false)
+	private DayOfWeek dayOfWeek;
+
+	@Temporal(TemporalType.TIME)
+	@Column(name = "start", nullable = false)
+	private Date startHour;
+
+	@Temporal(TemporalType.TIME)
+	@Column(name = "end", nullable = false)
+	private Date endHour;
 
 	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
 	@OnDelete(action = OnDeleteAction.CASCADE)
@@ -83,6 +101,30 @@ public class Professor {
 
 	public void setDepartment(Department department) {
 		this.department = department;
+	}
+	
+	public DayOfWeek getDayOfWeek() {
+		return dayOfWeek;
+	}
+	
+	public void setDayOfWeek(DayOfWeek dayOfWeek) {
+		this.dayOfWeek = dayOfWeek;
+	}
+	
+	public Date getStartHour() {
+		return startHour;
+	}
+	
+	public void setStartHour(Date startHour) {
+		this.startHour = startHour;
+	}
+	
+	public Date getEndHour() {
+		return endHour;
+	}
+	
+	public void setEndHour(Date endHour) {
+		this.endHour = endHour;
 	}
 
 	public List<Allocation> getAllocations() {

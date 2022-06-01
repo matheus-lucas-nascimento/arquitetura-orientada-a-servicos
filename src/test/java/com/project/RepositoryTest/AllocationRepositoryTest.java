@@ -1,4 +1,4 @@
-package com.project.professorallocation;
+package RepositoryTest;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

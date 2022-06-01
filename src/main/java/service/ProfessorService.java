@@ -66,14 +66,46 @@ public class ProfessorService {
     }
 
     private Professor saveInternal(Professor professor) {
-        professor = professorRepository.save(professor);
+        if(!isEndHourGreaterThanStartHour(professor) || hasCollision(professor)) {
+        	throw new RuntimeException();
+        }
+        else {
+        	professor = professorRepository.save(professor);
 
-        Department department = departmentService.findById(professor.getDepartmentId());
-        professor.setDepartment(department);
+            Department department = departmentService.findById(professor.getDepartmentId());
+            professor.setDepartment(department);
 
-        List<Allocation> allocations = allocationRepository.findByProfessorId(professor.getId());
-        professor.setAllocations(allocations);
+            List<Allocation> allocations = allocationRepository.findByProfessorId(professor.getId());
+            professor.setAllocations(allocations);
 
-        return professor;
+            return professor;
+        }
+    }
+    
+    boolean isEndHourGreaterThanStartHour(Professor professor) {
+        return professor != null && professor.getStartHour() != null && professor.getEndHour() != null
+                && professor.getEndHour().compareTo(professor.getStartHour()) > 0;
+    }
+    
+    boolean hasCollision(Professor newProfessor) {
+        boolean hasCollision = false;
+
+        List<Professor> currentProfessors = professorRepository.findByDepartmentId(newProfessor.getDepartmentId());
+
+        for (Professor currentProfessor : currentProfessors) {
+            hasCollision = hasCollision(currentProfessor, newProfessor);
+            if (hasCollision) {
+                break;
+            }
+        }
+
+        return hasCollision;
+    }
+    
+    private boolean hasCollision(Professor currentProfessor, Professor newProfessor) {
+        return !currentProfessor.getId().equals(newProfessor.getId())
+                && currentProfessor.getDayOfWeek() == newProfessor.getDayOfWeek()
+                && currentProfessor.getStartHour().compareTo(newProfessor.getEndHour()) < 0
+                && newProfessor.getStartHour().compareTo(currentProfessor.getEndHour()) < 0;
     }
 }

@@ -58,11 +58,43 @@ public class DepartmentService {
     }
 
     private Department saveInternal(Department department) {
-        department = departmentRepository.save(department);
+        if(!isEndHourGreaterThanStartHour(department) || hasCollision(department)) {
+        	throw new RuntimeException();    	
+        }
+        else {
+        	department = departmentRepository.save(department);
 
-        List<Professor> professors = professorRepository.findByDepartmentId(department.getId());
-        department.setProfessors(professors);
+            List<Professor> professors = professorRepository.findByDepartmentId(department.getId());
+            department.setProfessors(professors);
 
-        return department;
+            return department;
+        }
+    }
+    
+    boolean isEndHourGreaterThanStartHour(Department department) {
+        return department != null && department.getStartHour() != null && department.getEndHour() != null
+                && department.getEndHour().compareTo(department.getStartHour()) > 0;
+    }
+    
+    boolean hasCollision(Department newDepartment) {
+        boolean hasCollision = false;
+
+        List<Department> currentDepartments = departmentRepository.findByNameContainingIgnoreCase(newDepartment.getName());
+
+        for (Department currentDepartment : currentDepartments) {
+            hasCollision = hasCollision(currentDepartment, newDepartment);
+            if (hasCollision) {
+                break;
+            }
+        }
+
+        return hasCollision;
+    }
+    
+    private boolean hasCollision(Department currentDepartment, Department newDepartment) {
+        return !currentDepartment.getId().equals(newDepartment.getId())
+                && currentDepartment.getDayOfWeek() == newDepartment.getDayOfWeek()
+                && currentDepartment.getStartHour().compareTo(newDepartment.getEndHour()) < 0
+                && newDepartment.getStartHour().compareTo(currentDepartment.getEndHour()) < 0;
     }
 }

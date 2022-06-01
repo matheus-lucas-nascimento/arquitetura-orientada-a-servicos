@@ -65,4 +65,31 @@ public class CourseService {
 
         return course;
     }
+    
+    boolean isEndHourGreaterThanStartHour(Course course) {
+        return course != null && course.getStartHour() != null && course.getEndHour() != null
+                && course.getEndHour().compareTo(course.getStartHour()) > 0;
+    }
+    
+    boolean hasCollision(Course newCourse) {
+        boolean hasCollision = false;
+
+        List<Course> currentCourses = courseRepository.findByNameContainingIgnoreCase(newCourse.getName());
+
+        for (Course currentCourse : currentCourses) {
+            hasCollision = hasCollision(currentCourse, newCourse);
+            if (hasCollision) {
+                break;
+            }
+        }
+
+        return hasCollision;
+    }
+    
+    private boolean hasCollision(Course currentCourse, Course newCourse) {
+        return !currentCourse.getId().equals(newCourse.getId())
+                && currentCourse.getDayOfWeek() == newCourse.getDayOfWeek()
+                && currentCourse.getStartHour().compareTo(newCourse.getEndHour()) < 0
+                && newCourse.getStartHour().compareTo(currentCourse.getEndHour()) < 0;
+    }
 }

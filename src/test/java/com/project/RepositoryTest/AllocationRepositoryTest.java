@@ -1,4 +1,4 @@
-package RepositoryTest;
+package com.project.RepositoryTest;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -14,6 +14,7 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.TestPropertySource;
 
 import entity.Allocation;
+import repository.AllocationRepository;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)

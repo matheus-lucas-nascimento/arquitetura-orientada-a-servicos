@@ -1,4 +1,4 @@
-package RepositoryTest;
+package com.project.RepositoryTest;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,9 +9,8 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.TestPropertySource;
 
 import entity.Professor;
+import repository.ProfessorRepository;
 
-import java.text.SimpleDateFormat;
-import java.time.DayOfWeek;
 import java.util.List;
 
 @DataJpaTest

@@ -1,4 +1,4 @@
-package RepositoryTest;
+package com.project.RepositoryTest;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,17 +9,15 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.TestPropertySource;
 
 import entity.Department;
+import repository.DepartmentRepository;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.DayOfWeek;
 import java.util.List;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 @Rollback(false)
 @TestPropertySource(locations = "classpath:application.properties")
-public class DepartamentRepositoryTest {
+public class DepartmentRepositoryTest {
 
 	@Autowired
     DepartmentRepository departmentRepository;
